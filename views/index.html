@@ -19,27 +19,20 @@
           <div>
             <h4>Hotels</h4>
             <select data-type="hotel" id="hotel-choices">
-
-            <!-- for (var i=0; i<hotels.length; i++) {
-            $('#hotel-choices').append('<option>' + hotels[i].name + '</option>')
-
-            } -->
-
-              <option>...</option>
             </select>
             <button data-action="add" class="btn btn-primary btn-circle pull-right">+</button>
           </div>
           <div>
             <h4>Restaurants</h4>
             <select data-type="restaurant" id="restaurant-choices">
-              <option>...</option>
+
             </select>
             <button data-action="add" class="btn btn-primary btn-circle pull-right">+</button>
           </div>
           <div>
             <h4>Activities</h4>
             <select data-type="activity" id="activity-choices">
-              <option>...</option>
+
             </select>
             <button data-action="add" class="btn btn-primary btn-circle pull-right">+</button>
           </div>
@@ -91,13 +84,15 @@
     </div>
   </div>
 </div>
+  <script>
+      {% autoescape false %}
+      var hotels = {{ hotels | json }};
+      var restaurants = {{ restaurants | json }};
+      var activities = {{ activities | json }};
+      {% endautoescape %}
+    </script>
 
-<script>
-  {% autoescape false %}
-  var hotels = {{ hotels | json }};
-  var restaurants = {{ restaurants | json }};
-  var activities = {{ activities | json }};
-  {% endautoescape %}
-</script>
+
+
 
 {% endblock %}
