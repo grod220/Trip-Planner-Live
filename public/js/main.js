@@ -112,6 +112,8 @@ $(function initializeMap (){
 
           // add to itinerary
           $('#itinerary>div:nth-child('+childNum+')').append('<div data-id="2" class="itinerary-item"><span class="title">' + selectedText + '</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button>');
+
+
           //add to map
           for (var i=0; i<database.length; i++) {
               if (selectedText === database[i].name) {
@@ -163,7 +165,46 @@ $(function initializeMap (){
         }
         $('.current-day').removeClass('current-day');
         $(this).addClass('current-day');
-        console.log(this.id);
+        for (var i=0; i<holderArr.length; i++) {
+            holderArr[i].setMap(null);
+        }
+        $('#itinerary').html('<div id="hotel-choices"> <h4>My Hotel</h4> <ul class="list-group"> <div class="itinerary-item"> <!-- <span class="title">Andaz Wall Street</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button> --> </div> </ul> </div> <div id="restaurant-choices"> <h4>My Restaurants</h4> <ul class="list-group"> <div class="itinerary-item"> </div> </ul> </div> <div id="activity-choices"> <h4>My Activities</h4> <ul class="list-group"> <div class="itinerary-item"> </div> </ul> </div>');
+
+
+        var currentDayValue = $('.current-day').text();
+
+        for (var i=0; i<masterObj[currentDayValue]['hotel-choices'].length; i++) {
+          var text = masterObj[currentDayValue]['hotel-choices'][i];
+          // console.log(masterObj)
+          $('#itinerary>div:nth-child(1)').append('<div data-id="2" class="itinerary-item"><span class="title">'+ text +'</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button>');
+         for (var j=0; j<hotels.length; j++) {
+              if (text === hotels[j].name) {
+                drawMarker('hotel', [hotels[j].place.location[0], hotels[j].place.location[1]], text);
+            }
+          }
+        }
+
+
+        for (var i=0; i<masterObj[currentDayValue]['restaurant-choices'].length; i++) {
+          var text = masterObj[currentDayValue]['restaurant-choices'][i];
+          $('#itinerary>div:nth-child(2)').append('<div data-id="2" class="itinerary-item"><span class="title">'+ text +'</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button>');
+          for (var j=0; j<restaurants.length; j++) {
+              if (text === restaurants[j].name) {
+                drawMarker('hotel', [restaurants[j].place.location[0], restaurants[j].place.location[1]], text);
+            }
+          }
+        }
+
+        for (var i=0; i<masterObj[currentDayValue]['activity-choices'].length; i++) {
+          var text = masterObj[currentDayValue]['activity-choices'][i];
+          $('#itinerary>div:nth-child(3)').append('<div data-id="2" class="itinerary-item"><span class="title">'+ text +'</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button>');
+          for (var j=0; j<activities.length; j++) {
+              if (text === activities[j].name) {
+                drawMarker('hotel', [activities[j].place.location[0], activities[j].place.location[1]], text);
+            }
+          }
+        }
+
       });
     }
     switchDays();
