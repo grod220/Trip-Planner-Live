@@ -130,6 +130,7 @@ $(function initializeMap (){
     function remove () {
       // Get current day to point us to object
       $('#itinerary>div').on('click', '.remove', function(event){
+        console.log('clicked!');
         var currentDayValue = $('.current-day').text();
         var sectionID = $(this).parents()[1].id;
         var leftText = $(this).parent().text().slice(0,-2);
@@ -204,7 +205,7 @@ $(function initializeMap (){
             }
           }
         }
-
+        remove();
       });
     }
     switchDays();
