@@ -46,6 +46,17 @@ $(function initializeMap (){
     activity: '/images/star-3.png'
   };
 
+
+  //Creating array of object for models approach
+  var masterObj = {
+    '1' : {
+      'hotel-choices' : [],
+      'restaurant-choices' : [],
+      'activity-choices' : []
+    }
+  };
+
+
   var holderArr = [];
 
   function drawMarker (type, coords, text) {
@@ -79,8 +90,29 @@ $(function initializeMap (){
 
       function selectFindLocation (database, typeicon, dropDownID,childNum) {
         $(dropDownID).next().on('click', function(event){
+          // find and add to obj
+          var currentDayValue = $('.current-day').text();
+          //what if the object does not exist
+          if (!masterObj[currentDayValue]) {
+            masterObj[currentDayValue] = {
+              'hotel-choices' : [],
+              'restaurant-choices' : [],
+              'activity-choices' : []
+            }
+          }
+
+
+          var sectionID = $(this).prev()[0].id;
           var selectedText = $(dropDownID).find('option:selected').text();
+
+          masterObj[currentDayValue][sectionID].push(selectedText);
+          // console.log(masterObj);
+
+
+
+          // add to itinerary
           $('#itinerary>div:nth-child('+childNum+')').append('<div data-id="2" class="itinerary-item"><span class="title">' + selectedText + '</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button>');
+          //add to map
           for (var i=0; i<database.length; i++) {
               if (selectedText === database[i].name) {
                 drawMarker(typeicon, [database[i].place.location[0], database[i].place.location[1]], selectedText);
@@ -94,24 +126,47 @@ $(function initializeMap (){
     selectFindLocation(activities, 'activity', '#activity-choices',3);
 
     function remove () {
+      // Get current day to point us to object
       $('#itinerary>div').on('click', '.remove', function(event){
+        var currentDayValue = $('.current-day').text();
+        var sectionID = $(this).parents()[1].id;
         var leftText = $(this).parent().text().slice(0,-2);
+
+        for(var i = 0; i < masterObj[currentDayValue][sectionID].length; i++){
+          if (masterObj[currentDayValue][sectionID][i] === leftText) {
+            masterObj[currentDayValue][sectionID].splice(i, 1);
+          }
+        }
         for (var i=0; i<holderArr.length; i++) {
           if(holderArr[i].textHold === leftText) {
             holderArr[i].setMap(null);
           }
         }
         $(this).parent()[0].remove();
+        console.log(masterObj);
       });
     }
     remove();
 
     function addDay (){
       $('#day-add').on('click', function (event){
-        $('#day-add').prepend('<button class="btn btn-circle day-btn current-day">1</button>')
+        var dayNum = Number($(this).prev().text()) + 1;
+        $('<button class="btn btn-circle day-btn">'+ dayNum + '</button>').css('margin-left', '5px').insertBefore('#day-add');
       });
     }
+    addDay();
 
+    function switchDays() {
+      $('.day-buttons').on('click', '.btn-circle', function(event){
+        if (this.id === 'day-add') {
+          return;
+        }
+        $('.current-day').removeClass('current-day');
+        $(this).addClass('current-day');
+        console.log(this.id);
+      });
+    }
+    switchDays();
 
 });
 
